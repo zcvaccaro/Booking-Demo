@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Booking Confirmed! | Massage Therapy</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" type="image/svg+xml" href="Images/LOGO.svg">
+</head>
+<body class="confirmation-page">
+  <header>
+    <div class="container header-inner">
+      <div class="logo">
+        <a href="booking.html">
+          <img src="Images/LOGO.svg" alt="Chelsea Vaccaro Therapeutic Massage Logo" class="navbar-logo">
+          <span class="logo-text">Chelsea Vaccaro<br><small>Therapeutic Massage</small></span></a>
+      </div>
+      <nav id="navMenu">
+        <a href="booking.html">Booking Form</a>
+        <a href="intake.html">Intake Form</a>
+      </nav>
+      <button class="nav-toggle" id="navToggle">☰</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="confirmation-section container">
+      <h2 class="confirmation-title">Booking Confirmed!</h2>
+      <p id="confirmation-message">Thank you for your booking! You will recive an email confirmation shortly <br>
+      As a next step please fill out our secure client intake form here.</p>
+      <a id="intake-form-link" href="intake.html" class="cta">Intake Form</a>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Chelsea Vaccaro Therapeutic Massage. All rights reserved.</p>
+  </footer>
+  <script src="main.js"></script>
+  <script src="confirmation.js"></script>
+  <script>
+    // Pass the booking data from the current URL to the Intake Form link
+    document.addEventListener('DOMContentLoaded', () => {
+      const intakeLink = document.getElementById('intake-form-link');
+      if (intakeLink && window.location.search) {
+        intakeLink.href = 'intake.html' + window.location.search;
+      }
+    });
+  </script>
+</body>
+</html>

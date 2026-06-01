@@ -1,0 +1,1373 @@
+html {
+  scroll-padding-top: 180px;
+  overflow-x: hidden;
+}
+
+:root {
+  --primary-text-color: #333;
+  --accent-color-dark: #d9534f; /* A bootstrap-like danger red */
+  --brand-gold: #AB9C59;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: var(--primary-text-color);
+  background-color: #fff;
+  width: 100%;
+  overflow-x: hidden; /* Prevents horizontal scroll gaps on mobile */
+  margin: 0;
+  padding: 0;
+}
+
+h1, h2, h3 {
+  line-height: 1.2;
+  margin-bottom: 1rem;
+}
+
+h2 {
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+}
+
+img {
+  max-width: 100%;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+section {
+  padding: 4rem 0;
+}
+
+/* --- Buttons --- */
+.cta,
+button {
+  display: inline-block;
+  position: relative; /* Needed for loader positioning */
+  padding: 12px 24px;
+  border: none;
+  background: #000;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 50px;
+  border: 1px solid #000;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+.cta:hover,
+button:hover {
+  background-color: var(--brand-gold);
+  color: #fff;
+  border-color: var(--brand-gold);
+}
+
+/* --- Loading Spinner for Buttons --- */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+button.loading {
+  color: transparent !important; /* Hide button text */
+  cursor: wait;
+  pointer-events: none; /* Prevent multiple clicks */
+}
+
+button.loading::after {
+  content: '';
+  display: block;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 20px;
+  height: 20px;
+  margin-top: -12px;  /* Adjusted to be slightly higher */
+  margin-left: -10px; /* Half of width */
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  /* Ensure spinner appears above transparent text */
+  z-index: 1;
+}
+
+/* When hovering, the button background changes, so the spinner needs to adapt */
+button.loading:hover::after {
+  border-color: rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+}
+
+
+/* --- Header & Navigation --- */
+header {
+  background: #fff; /* Changed to white */
+  color: #000; /* Changed to black for contrast */
+  border-bottom: 1px solid #eee;
+  padding: 1rem 0;
+  position: sticky;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
+.header-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: none; /* Allow header to span full width */
+  width: 100%;
+  padding: 0 2rem;
+}
+
+.logo {
+  font-size: 2.3rem;
+  font-weight: bold;
+  line-height: 0.85; /* Brought closer together for better visual grouping */
+}
+
+.logo a {
+  display: flex; /* Use flexbox to align logo and text */
+  align-items: center; /* Vertically center items */
+  gap: 0.5rem; /* Space between logo and text */
+  white-space: nowrap; /* Prevent logo text from stacking */
+}
+
+.logo-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.navbar-logo {
+  height: 6.5rem; /* Increased size for a more prominent brand presence */
+  width: auto; /* Maintain aspect ratio */
+  /* Applies a filter to transform the SVG color to a slightly darker, more saturated version of the brand gold */
+  filter: invert(60%) sepia(20%) saturate(950%) hue-rotate(11deg) brightness(85%) contrast(92%);
+}
+
+.logo small {
+  font-size: 1.2rem;
+  font-weight: normal;
+  letter-spacing: 0.33rem; /* Restored to original spacing */
+}
+
+/* --- Navbar CTA Button Grouping --- */
+.nav-cta-group {
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+  margin-left: 1.2rem;
+  white-space: nowrap; /* Prevent buttons from stacking */
+}
+
+/* Vertically center the CTA group with the text links */
+#navMenu .nav-cta-group {
+  transform: translateY(-3px);
+}
+
+.nav-cta-group .cta {
+  margin: 0 !important;
+  position: relative;
+}
+
+.nav-cta-group .call-btn {
+  background-color: #fff !important;
+  color: #000 !important;
+  border-radius: 50px 0 0 50px !important;
+  border-right: none !important;
+  padding-right: 49px !important; /* Adjusted to balance padding for text centering */
+  margin-right: -25px !important; /* Pulls the reserve button over the right edge */
+  z-index: 1;
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, border-color 0.2s ease-in-out !important;
+}
+
+.nav-cta-group .call-btn:hover {
+  background-color: var(--brand-gold) !important;
+  color: #fff !important;
+  border-color: var(--brand-gold) !important;
+}
+
+.nav-cta-group .reserve-btn {
+  border-radius: 50px !important; /* Restored full pill shape */
+  padding: 12px 24px !important; /* Symmetrical padding to center text within the pill */
+  margin-right: -25px !important;
+  z-index: 3; /* Sits on top of Call and Gift Card buttons */
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, border-color 0.2s ease-in-out !important;
+}
+
+.nav-cta-group .reserve-btn:hover {
+  background-color: var(--brand-gold) !important;
+  color: #fff !important;
+  border-color: var(--brand-gold) !important;
+}
+
+.nav-cta-group .gift-card-btn {
+  background-color: #444444 !important; /* White background */
+  color: #ffffff !important; /* Black font */
+  border: 1px solid #000 !important; /* Black border */
+  border-left: none !important; /* Clean connection line */
+  margin-left: 0 !important; /* Overlap is now controlled by Reserve's margin-right */
+  border-radius: 0 50px 50px 0 !important; /* Flat left for connection, rounded right */
+  padding-left: 32px !important; /* Balanced with Call button's right padding for symmetry */
+  z-index: 2; /* Sits below Reserve */
+}
+
+.nav-cta-group .gift-card-btn:hover {
+  background-color: var(--brand-gold) !important;
+  border-color: var(--brand-gold) !important;
+  color: #fff !important;
+}
+
+/* --- Gift Card Modal Styles --- */
+.price-categories {
+  text-align: center;
+  margin: 1.5rem 0;
+}
+
+.price-cat-group {
+  margin-bottom: 1.2rem;
+}
+
+.price-cat-group h4 {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 2px;
+}
+
+.price-options-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.price-opt {
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  background: #fff;
+  color: #000; /* Black text for default state */
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.price-opt:hover {
+  border-color: var(--brand-gold);
+  background: var(--brand-gold);
+  color: #fff;
+}
+
+.price-opt.selected {
+  border-color: #000;
+  background: #000;
+  color: #fff;
+}
+
+.gift-selection-summary {
+  background: #f9f9f9;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-top: 1rem;
+  border-top: 4px solid var(--brand-gold);
+  text-align: center;
+}
+
+#navMenu a {
+  margin: 0 0.8rem; /* Tighter margins to fit "Reviews" link */
+  font-size: 1.1rem;
+  transition: opacity 0.3s ease;
+}
+
+#navMenu a:not(.cta):hover {
+  opacity: 0.7;
+}
+
+/* Only fade other links when hovering the links themselves, not the CTA group */
+#navMenu:hover a:not(.cta):not(:hover) {
+    color: #999;
+}
+#navMenu a:hover:not(.cta) {
+    color: #000;
+}
+
+/* Standardize CTA button weight in groups for both Navbar and Hero */
+.nav-cta-group .cta {
+  font-weight: 400;
+}
+
+.nav-toggle {
+  display: none; /* Hidden on desktop */
+  font-size: 1.5rem;
+  background: transparent;
+  color: #000; /* Make the hamburger icon black */
+}
+
+/* --- Hero Section --- */
+.hero {
+  position: relative;
+  min-height: calc(100vh - 130px); /* Adjusted for larger logo height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #fff;
+  padding: 0;
+  z-index: 1; /* Creates a stacking context so negative z-index children stay above body */
+}
+
+.hero img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -2;
+}
+
+.hero::after { /* Black overlay for text readability */
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: -1;
+}
+
+.hero h1 {
+  font-size: 4rem;
+}
+
+.hero p {
+  font-size: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+/* --- Services Section Padding --- */
+.services {
+  padding: 3rem 1.5rem; /* Added horizontal padding for mobile */
+}
+
+/* --- Services Section --- */
+.services .grid {
+  display: grid;
+  /* Mobile-first: 2 columns by default */
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+.card {
+  background: #fff;
+  border: 1px solid #eee;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  padding: 1.5rem; /* Reduced padding inside cards */
+  position: relative;
+  border-radius: 15px; /* Rounded corners */
+  display: flex; /* Enable flexbox for vertical alignment */
+  flex-direction: column; /* Stack items vertically */
+  transition: opacity 0.3s ease-in-out; /* Only need to transition opacity for the original card */
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.card h3 {
+  font-size: 1.4rem;
+}
+
+.card-summary {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Create space between text and button */
+  flex-grow: 1; /* Make the summary fill the card's space */
+}
+
+.learn-more {
+  margin-top: auto; /* Push button to the bottom */
+  align-self: center; /* Keep button centered */
+  width: fit-content;
+  padding: 8px 16px; /* Smaller button padding */
+  font-size: 0.9rem; /* Smaller button font */
+  margin-top: 1rem; /* Add a minimum space above the button */
+}
+
+/* Hide elements for future JS interaction */
+.info-box {
+  display: none;
+  flex-direction: column; /* Stack content and actions vertically */
+  height: 100%; /* Ensure it fills the card */
+}
+.info-box-content {
+  flex-grow: 1;
+  overflow-y: auto; /* Allow content to scroll if it overflows */
+  padding: 1rem; /* Add some padding around the content */
+  display: flex;
+  flex-direction: column; /* This is correct */
+}
+
+.price-line {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+.price-line p {
+  margin: 0 !important;
+  font-weight: bold;
+}
+.price-line p:not(:last-child) {
+  border-right: 1px solid #ccc;
+  padding-right: 1rem;
+}
+
+.info-box-content img {
+  max-height: 200px; /* Constrain the image height */
+  object-fit: cover; /* Ensure the image covers the area without distortion */
+  align-self: center; /* Center the image horizontally */
+  margin-bottom: 1rem;
+  margin-top: auto; /* Push the image (and text below it) down from the h3 */
+}
+
+.info-box-content p:last-of-type {
+  margin-bottom: auto; /* Center the content block vertically */
+}
+
+.info-box-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 1.5rem;
+  gap: 0.5rem;
+}
+
+.close-card-btn { font-size: 0.8rem; padding: 6px 12px; }
+
+/* Mobile Nav Active State */
+@media (max-width: 1280px) {
+  #navMenu.is-active {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: #fff; /* Change background to white */
+    padding: 1rem 0;
+    align-items: center; /* Center the nav items horizontally */
+    gap: 1rem; /* Add space between the menu items */
+  }
+
+  .reviews-column, .map-column {
+    flex: 0 0 100%; /* Force columns to span the full container width on tablets */
+    max-width: 100%;
+  }
+
+  .testimonial-carousel {
+    gap: 1rem; /* Reduce gap on tablet sizes to keep buttons visible */
+  }
+}
+
+/* --- About Sections --- */
+.about, .about-me {
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+}
+
+/* Add extra space below the "Our Promise" and "About Me" sections */
+#about, #about-me {
+  padding-bottom: 6rem;
+}
+
+/* --- Reviews & Map Section --- */
+.reviews-map {
+  background-color: #000;
+  color: #fff;
+  padding: 5rem 0;
+}
+
+.split-layout {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4rem;
+}
+
+.reviews-column, .map-column {
+  flex: 0 1 600px; /* Allows them to be wide but capped */
+  min-width: 0;
+}
+
+.reviews-column {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.reviews-column h2 {
+  color: var(--brand-gold);
+  margin-bottom: 2rem;
+}
+
+.testimonial-carousel {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.carousel-track-container {
+  overflow: hidden;
+  flex: 1 1 0px; /* ForceBasis to 0 ensures the container shrinks within the parent before pushing buttons out */
+  min-width: 0;
+  max-width: 100%;
+}
+
+.carousel-track {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  display: flex;
+}
+
+.carousel-slide {
+  min-width: 100%;
+  padding: 0 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.carousel-slide p {
+  font-style: italic;
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  word-wrap: break-word; /* Allow review text to wrap exactly like the About Me section */
+  overflow-wrap: break-word;
+}
+
+.carousel-slide span {
+  display: block;
+  font-weight: bold;
+  color: var(--brand-gold);
+}
+
+.carousel-button {
+  background: transparent;
+  border: none;
+  color: var(--brand-gold);
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0; /* Prevents navigation arrows from being squashed or pushed out */
+  cursor: pointer;
+  transition: opacity 0.3s;
+  z-index: 10; /* Ensure buttons are above the track container */
+}
+
+/* Explicitly size SVG icons for iOS Safari visibility */
+.carousel-button svg {
+  width: 24px;
+  height: 24px;
+  display: block;
+  pointer-events: none;
+}
+
+.carousel-button:hover {
+  background-color: transparent;
+  color: #fff; /* Changed to white on hover for contrast */
+  border-color: transparent;
+}
+
+.map-column iframe {
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.review-link {
+  background-color: transparent;
+  border: 1px solid var(--brand-gold);
+  color: var(--brand-gold);
+}
+
+.about-text {
+  flex: 1;
+}
+
+.about img, #about-me img {
+  flex: 1;
+  max-width: 500px;
+  border-radius: 5px;
+}
+
+.about-text ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.about-text ul li {
+  margin-bottom: 0.5rem;
+  padding-left: 1.5rem;
+  position: relative;
+}
+
+.about-text ul li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: #000;
+}
+
+/* --- Contact & Footer --- */
+.contact {
+  text-align: center;
+  background: #f4f4f4;
+}
+
+footer {
+  background: #000;
+  color: #fff;
+  text-align: center;
+  padding: 2rem 0;
+}
+
+/* --- Responsive Styles --- */
+@media (max-width: 1280px) {
+  h2 {
+    font-size: 2rem;
+  }
+
+  .nav-toggle {
+    display: block; /* Show hamburger menu */
+  }
+
+  #navMenu {
+    display: none; /* Hide nav links by default */
+  }
+
+  .header-inner {
+    padding: 0 1rem; /* Reduce padding on mobile to prevent content from pushing past the screen edge */
+  }
+
+  .logo {
+    font-size: 1.8rem;
+  }
+  .logo small {
+    font-size: 0.95rem;
+    letter-spacing: 0.26rem;
+  }
+
+  .about, #about-me {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .split-layout {
+    flex-direction: column;
+    gap: 3rem;
+  }
+
+  /* Reverse direction for the first about section */
+  .about {
+    flex-direction: column-reverse;
+  }
+
+  /* Fix about images stretching on mobile */
+  .about img, #about-me img {
+    flex: none;
+    width: auto;
+    max-height: 40vh;
+  }
+}
+
+/* --- Grid Breakpoints for Services --- */
+
+/* 4 columns for larger desktops */
+@media (min-width: 1200px) {
+  .services .grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* Spans the full width of the grid and is shorter than standard cards */
+.card.full-width {
+  grid-column: 1 / -1;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+
+/* --- JS-driven Active States --- */
+body.card-open {
+  overflow: hidden;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease-in-out;
+  z-index: 1999;
+}
+
+/* --- Form & Reservation Page Styles --- */
+.reservation-section {
+  padding-top: 4rem;
+  padding-bottom: 4rem;
+  max-width: 800px; /* Constrain form width for readability */
+  margin: 0 auto;
+}
+
+.reservation-section h2 {
+  margin-bottom: 1rem;
+}
+
+.reservation-section p {
+  text-align: center;
+  margin-bottom: 3rem;
+  color: #666;
+}
+
+.reservation-form,
+.intake-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-group {
+  position: relative;
+  z-index: 1;
+  flex-direction: column;
+  scroll-margin-top: 180px; /* Modern offset for sticky header */
+}
+
+.agreement-group,
+fieldset,
+section {
+  scroll-margin-top: 180px;
+}
+
+
+.form-row {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.form-row .form-group {
+  flex: 1;
+  min-width: 0; /* Prevents flex items from growing larger than their content container */
+}
+
+label {
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  color: #333;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="date"],
+input[type="number"],
+select,
+textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+  font-family: inherit;
+  color: #000;
+  background-color: #fff;
+  -webkit-appearance: none; /* Strips iOS default styling for all inputs */
+  appearance: none;
+  -webkit-text-fill-color: #000; /* Forces text to black on iOS for all form fields */
+  height: 3rem; /* Explicit height to unify date and time fields */
+  line-height: normal;
+}
+
+textarea {
+  height: auto; /* Ensure textareas can still grow vertically */
+  min-height: 100px;
+}
+
+/* Custom dropdown chevron for selects */
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 20px center;
+  background-size: 16px;
+  padding-right: 45px;
+}
+
+/* Force placeholder visibility and color across all browsers, especially iOS */
+::placeholder {
+  color: #aaa !important;
+  opacity: 1 !important; /* Fix for Firefox/iOS opacity defaults */
+}
+input::-webkit-input-placeholder {
+  color: #aaa !important;
+  -webkit-text-fill-color: #aaa !important; /* Ensure WebKit applies the placeholder color */
+}
+
+:-ms-input-placeholder { color: #aaa !important; } /* For IE10+ */
+::-ms-input-placeholder { color: #aaa !important; } /* For Edge */
+
+fieldset {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 1.5rem;
+  margin-top: 1rem;
+}
+
+legend {
+  padding: 0 0.5rem;
+  font-weight: bold;
+  color: #333;
+}
+
+/* --- Styles for Input with Icon --- */
+.input-with-icon {
+  position: relative;
+  display: block;
+  width: 100%;
+}
+
+.input-with-icon .input-icon {
+  position: absolute;
+  right: 20px; /* Pushed in from 15px */
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  width: 20px; /* Set a width for the icon */
+  height: 20px; /* Set a height for the icon */
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3crect x='3' y='4' width='18' height='18' rx='2' ry='2'%3e%3c/rect%3e%3cline x1='16' y1='2' x2='16' y2='6'%3e%3c/line%3e%3cline x1='8' y1='2' x2='8' y2='6'%3e%3c/line%3e%3cline x1='3' y1='10' x2='21' y2='10'%3e%3c/line%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0.6;
+}
+
+.input-with-icon input {
+  padding-right: 45px; /* Add space for the icon */
+}
+
+
+
+/* --- Intake Form Specific Styles --- */
+input[type="text"]:read-only, input[type="email"]:read-only, input[type="tel"]:read-only {
+  background-color: #f0f0f0; /* Grey out non-editable fields */
+  cursor: not-allowed;
+}
+
+/* Override read-only style specifically for the flatpickr date input */
+input#date:read-only,
+input.datepicker:read-only,
+input.datepicker {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  cursor: pointer; /* Use a pointer to indicate it's clickable */
+  -webkit-appearance: none !important; /* Removes iOS default styling */
+  -moz-appearance: none !important;
+  appearance: none !important;
+  opacity: 1 !important; /* Prevents iOS from greying out readonly fields */
+  -webkit-text-fill-color: #000; /* Ensures black text after selection */
+}
+
+
+.radio-group {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 0.5rem;
+}
+
+/* On-Site Request specific radio button styling */
+.onsite-contact-group {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.onsite-contact-group .radio-group {
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.radio-button-style {
+  display: inline-block;
+  padding: 10px 25px;
+  border: 1px solid #000;
+  background: #fff;
+  color: #000;
+  border-radius: 50px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.radio-group input[type="radio"]:checked + .radio-button-style {
+  background: #000;
+  color: #fff;
+}
+
+.radio-group label {
+  font-weight: normal;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.body-chart-container {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 2rem;
+  margin-top: 1rem;
+}
+
+.body-chart {
+  position: relative;
+  cursor: crosshair;
+  text-align: center;
+  flex: 1;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+}
+
+.body-chart > div[style*="position: relative;"] {
+  /* This targets the JS-created image wrapper */
+  flex-grow: 1; /* Allow the wrapper to grow and fill the vertical space */
+}
+
+.body-chart canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.body-chart img {
+  max-width: 100%;
+  height: 100%; /* Allow image to fill the container's height */
+  object-fit: contain; /* Prevent the image from being distorted */
+}
+
+.body-chart p {
+  margin-top: 0.5rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.undo-btn {
+  margin-top: 0.75rem;
+  padding: 4px 12px;
+  font-size: 0.8rem;
+  font-weight: normal;
+  text-transform: none;
+  background-color: #000000; /* Black when enabled */
+  border-color: #000000;
+  align-self: center;
+  width: fit-content;
+}
+
+.undo-btn:disabled {
+  background-color: #ccc;
+  border-color: #ccc;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* --- Terms and Conditions Box --- */
+.terms-box {
+  /* Removed styles for scrollable box to display all content */
+  margin-bottom: 1.5rem;
+  text-align: center; /* Center all the text inside */
+}
+
+.terms-box ul {
+  display: inline-block; /* Allows the list block to be centered */
+  text-align: left; /* Keep the list item text left-aligned for readability */
+}
+
+.terms-box h4 {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.agreement-group {
+  display: flex;
+  flex-direction: column; /* Stack text and box vertically */
+  align-items: center;
+  gap: 0.75rem; /* Space between text and box */
+}
+
+.checkbox-label {
+  cursor: pointer;
+}
+
+/* Hide the default checkbox */
+.agreement-group input[type="checkbox"] {
+  opacity: 0;
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
+/* Create a custom checkbox box */
+.agreement-group .checkbox-label::before {
+  content: '';
+  display: block;
+  width: 24px; /* Larger box */
+  height: 24px; /* Larger box */
+  border: 2px solid #333;
+  border-radius: 4px;
+  background-color: #fff;
+  transition: background-color 0.2s ease-in-out;
+}
+
+/* Style the custom checkbox when the hidden input is checked */
+.agreement-group input[type="checkbox"]:checked ~ .checkbox-label::before {
+  background-color: #000; /* Black background when checked */
+  border-color: #000;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%23fff' d='M6.564.75l-3.59 3.612-1.538-1.55L0 4.26l2.974 2.99L8 2.193z'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/* --- Confirmation Page Styles --- */
+.confirmation-section {
+  text-align: center;
+  padding: 5rem 2rem;
+}
+
+.confirmation-title {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+/* Note: Changed selector from class to ID to match HTML */
+#confirmation-message {
+  font-size: 1.2rem;
+  color: #555;
+  margin-bottom: 2rem; /* Reduced space above the button */
+}
+
+/* --- Sticky Footer & Centering for Confirmation Page --- */
+.confirmation-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Ensure body takes up full viewport height */
+}
+
+.confirmation-page main {
+  flex-grow: 1; /* Allow main content to grow and push footer down */
+  display: flex;
+  justify-content: center; /* Center content horizontally */
+  align-items: center;   /* Center content vertically */
+}
+
+/* --- Modal Styles --- */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: none; /* Hidden by default */
+  justify-content: center;
+  align-items: center;
+  z-index: 3000; /* Ensure it's on top of everything */
+}
+
+.modal-content {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 8px;
+  max-width: 600px;
+  width: 90%;
+  position: relative;
+  text-align: center;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.close-modal-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  color: #555;
+}
+
+/* --- Form Layout & Mobile Optimization --- */
+.client-treatment-group {
+  margin-bottom: 1rem;
+}
+
+.address-row {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.address-row .address-field {
+  flex: 2;
+}
+
+.address-row .clients-field {
+  flex: 1;
+}
+
+/* --- Custom Stepper Styles --- */
+.stepper-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  height: 3rem;
+}
+.stepper-btn {
+  width: 3.5rem;
+  height: 100%;
+  border-radius: 5px;
+  background-color: #f4f4f4;
+  color: #000;
+  font-size: 1.5rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #ccc;
+  padding: 0;
+}
+#numberOfClients {
+  text-align: center;
+}
+
+@media (max-width: 600px) {
+  .container {
+    padding: 0 1.25rem; /* Reduced from 2rem to give more horizontal room on small screens */
+    width: 100%;
+  }
+
+  /* Refine services grid for 2-column mobile layout */
+  .services .grid {
+    gap: 0.75rem; /* Tighter gap to maximize card space */
+  }
+
+  .card {
+    padding: 1rem; /* Reduced padding for more content room */
+  }
+
+  .card h3 {
+    font-size: 1.1rem; /* Slightly smaller headers to prevent wrapping issues */
+  }
+
+  .logo {
+    font-size: 1.4rem;
+  }
+  .logo small {
+    font-size: 0.75rem;
+    letter-spacing: 0.2rem;
+  }
+
+  .split-layout {
+    gap: 2rem; /* Reduce vertical gap between reviews and map */
+  }
+
+  .reviews-column, .map-column {
+    width: 100% !important;
+    flex: none !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+    overflow: hidden; /* Fixes "zoom out" behavior by ensuring no horizontal spill */
+  }
+
+  /* Stack standard rows on mobile to prevent overlapping and alignment issues */
+  .form-row,
+  .address-row {
+    flex-direction: column !important;
+    gap: 1.25rem;
+  }
+
+  /* Helper class for rows that should stay side-by-side and split 50/50 (like Date/Time) */
+  .date-time-row {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important; /* Force exact 50/50 split */
+    width: 100% !important;
+    gap: 0.75rem;
+    align-items: flex-end; /* Keeps inputs aligned if labels wrap differently */
+  }
+  .date-time-row .form-group {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .testimonial-carousel {
+    gap: 0.25rem; /* Minimize gap to give text maximum horizontal room */
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .carousel-track-container {
+    min-width: 0;
+    flex: 1;
+  }
+
+  .carousel-button {
+    width: 35px;
+    flex-shrink: 0; /* Prevents navigation arrows from being squashed */
+  }
+
+  .carousel-slide p {
+    font-size: 1.05rem;
+    padding: 0; /* Maximize width for review text content */
+  }
+
+  .reviews-map {
+    padding: 4rem 0 2rem 0; /* Reduced bottom padding to bring map closer */
+  }
+  /* Narrow the body charts to allow for scrolling gutters on the sides */
+  .body-chart {
+    max-width: 85%;
+    margin: 0 auto;
+  }
+  /* Adjust label size slightly on mobile to prevent text wrapping from breaking layouts */
+  label {
+    font-size: 0.9rem;
+  }
+}
+
+/* --- Helper Styles --- */
+.link-button {
+  background: none;
+  border: none;
+  color: #000;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 0;
+  font-size: inherit;
+}
+
+.link-button:hover {
+  background: none !important;
+  color: #000 !important;
+  border: none !important;
+}
+
+/* --- Consolidated Square Card Container --- */
+#card-container {
+  width: 100%;
+  min-height: 3rem;
+  margin: 0.5rem 0 1.5rem 0;
+  padding: 0; /* CRITICAL: Padding must be 0 for Square iframe focus to work */
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #fff;
+  position: relative;
+  z-index: 10;
+  display: block;
+  visibility: visible;
+  pointer-events: auto !important; /* Forces interaction availability */
+}
+
+#card-container.sq-card-component--focused {
+  border-color: var(--brand-gold);
+}
+
+/* Force placeholder color for selects, even when disabled.
+   Targeting the select directly is key for the color shown when the dropdown is closed. */
+select.placeholder-selected,
+select.placeholder-selected:disabled,
+select.placeholder-selected option[disabled][selected],
+input[type="date"].placeholder-selected::-webkit-datetime-edit-text,
+input[type="date"].placeholder-selected::-webkit-datetime-edit-month-field,
+input[type="date"].placeholder-selected::-webkit-datetime-edit-day-field,
+input[type="date"].placeholder-selected::-webkit-datetime-edit-year-field {
+  color: #aaa !important;
+  -webkit-text-fill-color: #aaa !important;
+  opacity: 1 !important; /* Prevents the browser from fading the text */
+  background-color: #fff !important;
+  border-color: #ccc !important;
+}
+
+input[type="date"].placeholder-selected {
+  color: #aaa !important;
+}
+
+/* Ensure the actual duration and time options in the list are always black */
+select.placeholder-selected option:not([disabled]) {
+  color: #000 !important;
+  -webkit-text-fill-color: #000 !important;
+}
+
+/* --- Flatpickr Calendar Customization --- */
+.flatpickr-day.selected,
+.flatpickr-day.selected:focus,
+.flatpickr-day.selected:hover,
+.flatpickr-day.selected.prevMonthDay,
+.flatpickr-day.selected.nextMonthDay {
+  background: #000 !important;
+  border-color: #000 !important;
+  color: #fff !important;
+  box-shadow: none !important;
+}
+
+/* --- Accessibility --- */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Book an Appointment | Massage Therapy</title>
+  <meta name="description" content="Book your therapeutic massage appointment with Chelsea Vaccaro in New Paltz, NY. Choose from Deep Tissue, Swedish, Prenatal, and more.">
+
+  <!-- Open Graph / Social Media -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.chelseavaccaro.com/Booking.html">
+  <meta property="og:title" content="Book an Appointment | Chelsea Vaccaro">
+  <meta property="og:description" content="Schedule your next massage session online. Expert care in New Paltz, NY.">
+  <meta property="og:image" content="Images/GoldOnBlackLogo.png">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:image" content="Images/GoldOnBlackLogo.png">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" type="image/svg+xml" href="Images/LOGO.svg">
+</head>
+<body>
+  <header>
+    <div class="container header-inner">
+      <div class="logo">
+        <a href="booking.html">
+          <img src="Images/LOGO.svg" alt="Chelsea Vaccaro Therapeutic Massage Logo" class="navbar-logo">
+          <span class="logo-text">Chelsea Vaccaro<br><small>Therapeutic Massage</small></span></a>
+      </div>
+      <nav id="navMenu">
+        <a href="booking.html">Booking Form</a>
+        <a href="intake.html">Intake Form</a>
+      </nav>
+      <button class="nav-toggle" id="navToggle">☰</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="reservation-section container">
+      <h2>Book Your Appointment</h2>
+      <p>Fill out the form below to request an appointment. We'll contact you shortly to confirm.</p>
+      <form class="reservation-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="firstName">First Name</label>
+            <input type="text" id="firstName" name="firstName" required>
+          </div>
+          <div class="form-group">
+            <label for="lastName">Last Name</label>
+            <input type="text" id="lastName" name="lastName" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" name="email" required>
+        </div>
+        <div class="form-group">
+          <label for="phone">Phone Number</label>
+          <input type="tel" id="phone" name="phone" inputmode="tel" required>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="service">Service Desired</label>
+            <select id="service" name="service" required>
+              <option value="" disabled selected>Select a service...</option>
+              <option value="deep-tissue">Deep Tissue</option>
+              <option value="swedish">Swedish</option>
+              <option value="prenatal">Prenatal</option>
+              <option value="mfr">Myofascial Release (MFR)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="length">Duration</label>
+            <select id="length" name="length" required>
+              <option value="" disabled selected>Select a length...</option>
+              <option value="30">30 minutes</option>
+              <option value="60">60 minutes</option>
+              <option value="90">90 minutes</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="date">Date</label>
+            <div class="input-with-icon">
+              <input type="text" id="date" name="date" class="datepicker" required placeholder="Select a date...">
+              <span class="input-icon"></span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="time">Available Times</label>
+            <select id="time" name="time" required>
+              <option value="" disabled selected>Please select a date first...</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="comments">Intention for Treatment (Optional)</label>
+          <textarea id="comments" name="comments" rows="5"></textarea>
+        </div>
+
+        <fieldset>
+          <legend>Payment Information <small>(feel free to skip this for this demo)</small></legend>
+          <div class="form-group" style="margin-bottom: 1rem;">
+            <label for="cardName">Name on Card</label>
+            <input type="text" id="cardName" name="cardName">
+          </div>
+
+          <div class="form-group">
+            <label>Card Number</label>
+            <input type="text" id="mockCardNumber" name="mockCardNumber" placeholder="XXXX XXXX XXXX XXXX">
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="mockExpDate">Exp. Date</label>
+              <input type="text" id="mockExpDate" name="mockExpDate" placeholder="MM/YY">
+            </div>
+            <div class="form-group">
+              <label for="mockCCV">CCV</label>
+              <input type="text" id="mockCCV" name="mockCCV" placeholder="XXX">
+            </div>
+            <div class="form-group">
+              <label for="mockZip">Zip Code</label>
+              <input type="text" id="mockZip" name="mockZip" placeholder="XXXXX">
+            </div>
+          </div>
+
+          <!-- New placeholder for saved card option -->
+          <div id="saved-card-option" style="display: none;">
+            <p style="text-align: center; margin-bottom: 1rem;">
+              We have a card on file for you ending in ****. If you would like to use this card, simply submit your booking below. Otherwise...
+            </p>
+            <div style="display: flex; justify-content: center; gap: 1rem;">
+              <button type="button" id="use-new-card-btn" class="cta">Use a different card</button>
+            </div>
+          </div>
+
+          <div class="form-group agreement-group" style="margin-top: 1.5rem;">
+            <input type="checkbox" id="authCharge" name="authCharge">
+            <span class="agreement-text" style="font-size: 0.9rem; text-align: center;">
+                <strong>I authorize Chelsea Vaccaro Therapeutic Massage to store my card on file and charge cancellation or no-show fees according to policy.</strong>
+            </span>
+            <label for="authCharge" class="checkbox-label"></label>
+            <small id="auth-error-message" class="error-message" style="display: none; color: var(--accent-color-dark); margin-top: 5px;">You must authorize the card hold to continue.</small>
+          </div>
+
+          <div class="form-group" style="text-align: center; gap: 0.5rem; margin-top: 1rem;">
+            <small>This information is only for charging a cancellation fee. Please bring your preferred payment method to your appointment.</small><br>
+            <button type="button" id="cancellation-policy-btn" class="link-button">See Cancellation Policy</button>
+          </div>
+        </fieldset>
+
+        <button type="submit" class="cta">Submit</button>
+      </form>
+    </section>
+  </main>
+
+  <!-- Cancellation Policy Modal -->
+  <div id="cancellation-modal" class="modal-overlay">
+    <div class="modal-content">
+      <button id="close-modal-btn" class="close-modal-btn">&times;</button>
+      <h4>Cancellation Policy</h4>
+      <br>
+      <div>To ensure all clients are treated fairly and can receive treatment on time, I ask that you provide at least <strong>24 hours notice</strong>
+        if you need to change, reschedule, or cancel your appointment.<br>
+      The following fees will apply for appointments changed or missed without sufficient notice:</div>
+      <ul>
+        <li><strong>Less than 24 hours notice:</strong> 50% of the treatment price.</li>
+        <li><strong>No-show or missed appointment:</strong> 100% of the treatment price.</li>
+      </ul>
+      <p><em>Note: The first time a client does not show up for their appointment, they will not be charged. However, the above policy will apply to every missed appointment thereafter.</em></p>
+      <p>Any charges incurred must be paid prior to your next scheduled appointment. I appreciate your understanding.</p>
+    </div>
+  </div>
+
+
+  <footer>
+    <p>&copy; 2025 Chelsea Vaccaro Therapeutic Massage. All rights reserved.</p>
+  </footer>
+
+  <script>
+    window.SQUARE_APP_ID = "YOUR_SQUARE_APP_ID"; // Replace with actual ID for demo
+    window.SQUARE_LOCATION_ID = "YOUR_SQUARE_LOCATION_ID"; // Replace with actual ID for demo
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script src="main.js"></script>
+  <script src="booking.js"></script>
+</body>
+</html>

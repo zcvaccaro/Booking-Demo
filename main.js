@@ -1,0 +1,432 @@
+document.addEventListener("DOMContentLoaded", () => {
+  // --- Mobile Navigation Toggle ---
+  const navToggle = document.getElementById("navToggle");
+  const navMenu = document.getElementById("navMenu");
+  if (navToggle && navMenu) {
+    navToggle.addEventListener("click", () => {
+      navMenu.classList.toggle("is-active");
+    });
+  }
+
+  // --- Global Phone Number Formatting ---
+  const formatPhoneInput = (e) => {
+    const input = e.target;
+    // Strip all non-numeric characters
+    let value = input.value.replace(/\D/g, '');
+
+    // Limit to 10 digits
+    if (value.length > 10) value = value.slice(0, 10);
+
+    let formattedValue = '';
+    if (value.length > 0) {
+      formattedValue = '(' + value.slice(0, 3);
+      if (value.length > 3) {
+        formattedValue += ') ' + value.slice(3, 6);
+        if (value.length > 6) {
+          formattedValue += '-' + value.slice(6, 10);
+        }
+      }
+    }
+    input.value = formattedValue;
+  };
+
+  // Apply formatting to all phone fields across all forms
+  document.querySelectorAll('input[type="tel"], #phone').forEach(phoneInput => {
+    phoneInput.addEventListener('input', formatPhoneInput);
+  });
+
+  // Close mobile menu when clicking outside of it
+  document.addEventListener('click', (e) => {
+    if (navMenu.classList.contains('is-active') && !navMenu.contains(e.target) && !navToggle.contains(e.target)) {
+      navMenu.classList.remove('is-active');
+    }
+  });
+
+  // --- Testimonial Carousel Logic ---
+  const track = document.querySelector('.carousel-track');
+  const nextButton = document.querySelector('.next-btn');
+  const prevButton = document.querySelector('.prev-btn');
+
+  if (track && track.children.length > 0) {
+    const originalSlides = Array.from(track.children);
+    const firstClone = originalSlides[0].cloneNode(true);
+    const lastClone = originalSlides[originalSlides.length - 1].cloneNode(true);
+
+    track.appendChild(firstClone);
+    track.prepend(lastClone);
+
+    const slides = Array.from(track.children);
+    let currentIndex = 1;
+    let isMoving = false;
+    let autoCycleInterval;
+
+    const updateSlidePosition = (transition = true) => {
+      const slideWidth = track.parentElement.getBoundingClientRect().width;
+      track.style.transition = transition ? 'transform 500ms ease-in-out' : 'none';
+      track.style.transform = `translateX(-${slideWidth * currentIndex}px)`;
+    };
+
+    const startAutoCycle = () => {
+      clearInterval(autoCycleInterval);
+      autoCycleInterval = setInterval(() => {
+        if (!isMoving) {
+          currentIndex++;
+          updateSlidePosition();
+        }
+      }, 10000); // 10 seconds
+    };
+
+    // Pause auto-cycle on hover to allow reading
+    const carouselContainer = track.closest('.testimonial-carousel');
+    if (carouselContainer) {
+      carouselContainer.addEventListener('mouseenter', () => clearInterval(autoCycleInterval));
+      carouselContainer.addEventListener('mouseleave', startAutoCycle);
+    }
+
+    updateSlidePosition(false);
+    startAutoCycle();
+
+    nextButton.addEventListener('click', () => {
+      if (isMoving) return;
+      isMoving = true;
+      currentIndex++;
+      updateSlidePosition();
+      startAutoCycle(); // Reset timer on manual navigation
+    });
+
+    prevButton.addEventListener('click', () => {
+      if (isMoving) return;
+      isMoving = true;
+      currentIndex--;
+      updateSlidePosition();
+      startAutoCycle(); // Reset timer on manual navigation
+    });
+
+    // --- Mobile Swipe Support ---
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    track.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+
+    track.addEventListener('touchend', (e) => {
+      touchEndX = e.changedTouches[0].screenX;
+      const swipeDistance = touchStartX - touchEndX;
+      const threshold = 50; // Minimum distance to trigger a slide change
+
+      if (Math.abs(swipeDistance) > threshold) {
+        if (swipeDistance > 0) nextButton.click(); // Swipe Left -> Next
+        else prevButton.click(); // Swipe Right -> Prev
+      }
+    }, { passive: true });
+
+    track.addEventListener('transitionend', () => {
+      isMoving = false;
+      if (currentIndex === slides.length - 1) {
+        currentIndex = 1;
+        updateSlidePosition(false);
+      }
+      if (currentIndex === 0) {
+        currentIndex = slides.length - 2;
+        updateSlidePosition(false);
+      }
+    });
+
+    // Handle window resize to keep current slide centered
+    window.addEventListener('resize', () => {
+      updateSlidePosition(false);
+    });
+  }
+
+  // --- Card Expansion Logic (Cloning Method) ---
+  const serviceCards = document.querySelectorAll(".card[data-service-id]");
+  const overlay = document.querySelector(".overlay");
+  let originalCard = null;
+  let isAnimating = false;
+
+  // --- Returning Client Lookup Modal ---
+  const showLookupModal = (targetUrl) => {
+    const modalHtml = `
+      <div id="lookup-modal" class="modal-overlay" style="display:flex; opacity:1; pointer-events:auto;">
+          <div class="modal-content" style="text-align: center; max-width: 450px;">
+              <button class="close-modal-btn" id="close-lookup-btn">&times;</button>
+              <h2 style="font-size: 1.8rem; margin-bottom: 0.5rem;">Returning Client?</h2>
+              <p style="margin-bottom: 1.5rem; color: #666;">Enter your email or phone number to pre-fill your info.</p>
+              <form id="lookup-form" class="reservation-form" style="max-width: 100%; gap: 1rem;">
+                  <div class="form-group">
+                      <input type="text" id="lookup-identifier" placeholder="Email or Phone Number" required style="text-align: center;">
+                  </div>
+                  <button type="submit" class="cta" id="lookup-submit-btn" style="width: 100%;">Find My Profile</button>
+                  <p id="lookup-error" style="color: var(--accent-color-dark); display: none; margin-top: 10px; font-size: 0.9rem;">Profile not found.</p>
+              </form>
+              <div style="margin: 1.5rem 0; display: flex; align-items: center; gap: 1rem; color: #ccc;">
+                  <hr style="flex: 1; border: 0; border-top: 1px solid #eee;"><span>or</span><hr style="flex: 1; border: 0; border-top: 1px solid #eee;">
+              </div>
+              <button id="new-client-btn" class="cta" style="width: 100%;">Continue as a new client &rarr;</button>
+          </div>
+      </div>`;
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+
+    const modal = document.getElementById('lookup-modal');
+    // Close modal when clicking on the overlay (off the modal content)
+    modal.onclick = (e) => {
+        if (e.target === modal) modal.remove();
+    };
+
+    document.getElementById('close-lookup-btn').onclick = () => modal.remove();
+    document.getElementById('new-client-btn').onclick = () => window.location.href = targetUrl;
+
+    document.getElementById('lookup-form').onsubmit = async (e) => {
+        e.preventDefault();
+        const identifier = document.getElementById('lookup-identifier').value;
+        const btn = document.getElementById('lookup-submit-btn');
+        const error = document.getElementById('lookup-error');
+        btn.classList.add('loading');
+        error.style.display = 'none';
+
+        try {
+            const res = await fetch(`/api/lookup-client?identifier=${encodeURIComponent(identifier)}`);
+            const data = await res.json();
+            if (data.found) {
+                const params = new URLSearchParams({
+                    firstName: data.firstName, lastName: data.lastName,
+                    email: data.email, phone: data.phone,
+                    dob: data.dob || '', address: data.address || '',
+                    hasCard: data.hasCard ? 'true' : 'false',
+                    last4: data.last4 || '',
+                    conditions: data.conditions || '',
+                    allergies: data.allergies || ''
+                });
+                window.location.href = targetUrl.includes('?') ? `${targetUrl}&${params.toString()}` : `${targetUrl}?${params.toString()}`;
+            } else { error.style.display = 'block'; }
+        } catch (err) { console.error(err); } finally { btn.classList.remove('loading'); }
+    };
+  };
+
+  // Intercept all Booking and OnSite links
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('a, button');
+    if (!btn || e.target.closest('#lookup-modal')) return;
+    const href = btn.getAttribute('href') || '';
+
+    // Intercept Gift Card buttons
+    if (btn.classList.contains('gift-card-btn')) {
+        e.preventDefault();
+        const giftModal = document.getElementById('gift-card-modal');
+        if (giftModal) giftModal.style.display = 'flex';
+        return;
+    }
+
+    if (href.includes('Booking.html') || href.includes('OnSiteRequest.html') || btn.classList.contains('reserve-btn')) {
+        e.preventDefault();
+        showLookupModal(href || '/Booking.html');
+    }
+  });
+
+  // --- Gift Card Modal Logic ---
+  const giftModal = document.getElementById('gift-card-modal');
+  const giftOpts = document.querySelectorAll('.price-opt');
+  const giftSummary = document.getElementById('gift-selection-summary');
+  const giftDetail = document.getElementById('gift-summary-detail');
+  const giftPrice = document.getElementById('gift-summary-price');
+
+  giftOpts.forEach(opt => {
+    opt.addEventListener('click', () => {
+        // UI Feedback
+        giftOpts.forEach(o => o.classList.remove('selected'));
+        opt.classList.add('selected');
+
+        // Update Content
+        const treatment = opt.dataset.treatment;
+        const duration = opt.dataset.duration;
+        const price = opt.dataset.price;
+
+        giftDetail.innerText = `${duration}-Min ${treatment} — $${price}`;
+        giftPrice.innerText = `$${price}`;
+        giftSummary.style.display = 'block';
+    });
+  });
+
+  document.getElementById('closeGiftModal')?.addEventListener('click', () => {
+    if (giftModal) giftModal.style.display = 'none';
+  });
+
+  // Helper function to animate elements
+  const animateCard = (element, keyframes, options) => {
+    return new Promise(resolve => {
+      const animation = element.animate(keyframes, options);
+      animation.onfinish = resolve;
+    });
+  };
+
+  const onCardClick = async (e) => {
+    if (isAnimating) return;
+    isAnimating = true;
+
+    originalCard = e.currentTarget;
+    const { top, left, width, height } = originalCard.getBoundingClientRect();
+
+    // 1. Create and position the clone
+    const cardClone = originalCard.cloneNode(true);
+    cardClone.style.position = 'fixed';
+    cardClone.style.top = `${top}px`;
+    cardClone.style.left = `${left}px`;
+    cardClone.style.width = `${width}px`;
+    cardClone.style.height = `${height}px`;
+    cardClone.style.zIndex = '2000';
+    cardClone.style.margin = '0';
+
+    // 2. Hide original card and show overlay
+    originalCard.style.opacity = '0';
+    document.body.appendChild(cardClone);
+    if (overlay) {
+      overlay.style.display = 'block';
+      overlay.style.pointerEvents = 'auto';
+      requestAnimationFrame(() => overlay.style.opacity = '1');
+    }
+
+    // 3. Hide summary content, show detailed content
+    const summary = cardClone.querySelector('.card-summary');
+    const details = cardClone.querySelector('.info-box');
+    summary.style.display = 'none';
+    details.style.display = 'flex';
+    details.style.opacity = '0'; // Start transparent
+
+    // 4. Animate the clone expanding
+    await animateCard(cardClone, [
+      { top: `${top}px`, left: `${left}px`, width: `${width}px`, height: `${height}px` },
+      { top: '50%', left: '50%', width: '70vw', height: '60vh', transform: 'translate(-50%, -50%)' }
+    ], { duration: 400, easing: 'ease-in-out', fill: 'forwards' });
+
+    // 5. Fade in the detailed content
+    details.style.transition = 'opacity 0.3s ease-in'; // Removed the 0.1s delay
+    details.style.opacity = '1';
+
+    // 6. Add close listeners
+    const closeButton = cardClone.querySelector('.close-card-btn');
+    const bookNowButton = cardClone.querySelector('.book-now-btn');
+
+    if (closeButton) {
+      closeButton.addEventListener('click', (e) => {
+        e.stopPropagation(); // Prevent the overlay click from also firing
+        onCloseClick();
+      });
+    }
+
+    if (bookNowButton) {
+      bookNowButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        // Determine target URL based on button href or default to booking
+        let targetUrl = bookNowButton.getAttribute('href') || '/Booking.html';
+        const serviceId = cardClone.getAttribute('data-service-id');
+
+        if (serviceId && !targetUrl.includes('service=')) {
+            targetUrl += (targetUrl.includes('?') ? '&' : '?') + `service=${serviceId}`;
+        }
+
+        showLookupModal(targetUrl);
+      });
+    }
+
+    if (overlay) {
+      overlay.addEventListener('click', () => onCloseClick(), { once: true });
+    }
+
+    isAnimating = false;
+  };
+
+  const onCloseClick = async (url = null) => {
+    if (isAnimating) return;
+    isAnimating = true;
+
+    const cardClone = document.querySelector('.card[style*="fixed"]');
+    if (!cardClone || !originalCard) {
+      isAnimating = false;
+      return;
+    }
+
+    // 1. Fade out detailed content
+    const details = cardClone.querySelector('.info-box');
+    details.style.transition = 'opacity 0.2s ease-out';
+    details.style.opacity = '0';
+
+    // 2. Animate the clone shrinking
+    const { top, left, width, height } = originalCard.getBoundingClientRect();
+    await animateCard(cardClone, [
+      { top: '50%', left: '50%', width: '70vw', height: '60vh', transform: 'translate(-50%, -50%)' },
+      { top: `${top}px`, left: `${left}px`, width: `${width}px`, height: `${height}px`, transform: 'translate(0, 0)' }
+    ], { duration: 400, easing: 'ease-in-out', fill: 'forwards' });
+
+    // 3. Fade out overlay and clean up
+    if (overlay) overlay.style.opacity = '0';
+
+    setTimeout(() => {
+      cardClone.remove();
+      originalCard.style.opacity = '1';
+      if (overlay) {
+        overlay.style.pointerEvents = 'none';
+        overlay.style.display = 'none';
+      }
+      originalCard = null;
+      isAnimating = false;
+      if (url && typeof url === 'string') {
+        window.location.href = url; // Navigate to the booking page
+      }
+    }, 400); // Match the animation duration
+  };
+
+  // Attach the primary click listener to each card's "Learn More" button
+  serviceCards.forEach(card => {
+    const learnMoreBtn = card.querySelector('.learn-more');
+    learnMoreBtn.addEventListener('click', (e) => {
+      e.stopPropagation(); // Prevent the card's own click listener from firing
+      onCardClick({ currentTarget: card }); // Pass the parent card to the handler
+    });
+  });
+
+  // --- Smooth Scrolling for Nav Links ---
+  const navLinks = document.querySelectorAll('#navMenu a[href^="#"]');
+
+  navLinks.forEach(link => {
+    link.addEventListener('click', function(e) {
+      // Prevent the default instant jump
+      e.preventDefault();
+
+      const href = this.getAttribute('href');
+      const targetId = href.substring(1); // Remove the '#'
+      const targetElement = document.getElementById(targetId);
+
+      // Special case for the "Home" link which might be just "#"
+      if (href === '#') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else if (href === '#about') {
+        // Special case for the "About" link to scroll below the services
+        const servicesSection = document.getElementById('services');
+        if (servicesSection) {
+          const elementPosition = servicesSection.getBoundingClientRect().bottom + window.scrollY;
+          window.scrollTo({ top: elementPosition - 180, behavior: 'smooth' });
+        }
+      } else if (href === '#services' && targetElement) {
+        // Special case for "Services" to align navbar bottom exactly with hero bottom/section top
+        const header = document.querySelector('header');
+        const headerHeight = header ? header.offsetHeight : 180;
+        const elementPosition = targetElement.getBoundingClientRect().top + window.scrollY;
+        window.scrollTo({ top: elementPosition - headerHeight, behavior: 'smooth' });
+      } else if (href === '#reviews' && targetElement) {
+        const header = document.querySelector('header');
+        const headerHeight = header ? header.offsetHeight : 180;
+        const elementPosition = targetElement.getBoundingClientRect().top + window.scrollY;
+        window.scrollTo({ top: elementPosition - headerHeight, behavior: 'smooth' });
+      } else if (targetElement) {
+        targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+
+      // Close the mobile menu after any link is clicked
+      if (navMenu.classList.contains('is-active')) {
+        navMenu.classList.remove('is-active');
+      }
+    });
+  });
+});
