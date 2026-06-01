@@ -227,10 +227,6 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    if (href.includes('index.html') || href.includes('OnSiteRequest.html') || btn.classList.contains('reserve-btn')) {
-        e.preventDefault();
-        showLookupModal(href || 'index.html');
-    }
   });
 
   // --- Gift Card Modal Logic ---
@@ -335,7 +331,7 @@ document.addEventListener("DOMContentLoaded", () => {
             targetUrl += (targetUrl.includes('?') ? '&' : '?') + `service=${serviceId}`;
         }
 
-        showLookupModal(targetUrl);
+        window.location.href = targetUrl;
       });
     }
 

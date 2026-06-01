@@ -314,7 +314,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // No actual fetch call needed for mocking
 
                 // 5. Redirect on success
-                window.location.href = 'IntakeConfirm.html';
+                window.location.href = 'intakeConfirm.html';
             } catch (error) {
                 console.error('Intake form submission error:', error);
                 alert('There was an error submitting your form. Please try again.');
