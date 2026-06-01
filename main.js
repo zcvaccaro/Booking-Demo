@@ -186,8 +186,17 @@ document.addEventListener("DOMContentLoaded", () => {
         error.style.display = 'none';
 
         try {
-            const res = await fetch(`/api/lookup-client?identifier=${encodeURIComponent(identifier)}`);
-            const data = await res.json();
+            // Mocking the lookup for the static GitHub Pages demo
+            const data = {
+                found: true,
+                firstName: "Jane",
+                lastName: "Doe",
+                email: identifier.includes('@') ? identifier : "jane@example.com",
+                phone: "(555) 555-5555",
+                hasCard: true,
+                last4: "4242"
+            };
+            
             if (data.found) {
                 const params = new URLSearchParams({
                     firstName: data.firstName, lastName: data.lastName,
@@ -218,9 +227,9 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    if (href.includes('Booking.html') || href.includes('OnSiteRequest.html') || btn.classList.contains('reserve-btn')) {
+    if (href.includes('index.html') || href.includes('OnSiteRequest.html') || btn.classList.contains('reserve-btn')) {
         e.preventDefault();
-        showLookupModal(href || '/Booking.html');
+        showLookupModal(href || 'index.html');
     }
   });
 
@@ -319,7 +328,7 @@ document.addEventListener("DOMContentLoaded", () => {
         e.preventDefault();
         e.stopPropagation();
         // Determine target URL based on button href or default to booking
-        let targetUrl = bookNowButton.getAttribute('href') || '/Booking.html';
+        let targetUrl = bookNowButton.getAttribute('href') || 'index.html';
         const serviceId = cardClone.getAttribute('data-service-id');
 
         if (serviceId && !targetUrl.includes('service=')) {
