@@ -151,8 +151,8 @@ document.addEventListener("DOMContentLoaded", () => {
       <div id="lookup-modal" class="modal-overlay" style="display:flex; opacity:1; pointer-events:auto;">
           <div class="modal-content" style="text-align: center; max-width: 450px;">
               <button class="close-modal-btn" id="close-lookup-btn">&times;</button>
-              <h2 style="font-size: 1.8rem; margin-bottom: 0.5rem;">Returning Client?</h2>
-              <p style="margin-bottom: 1.5rem; color: #666;">Enter your email or phone number to pre-fill your info.</p>
+              <h2 style="font-size: 1.8rem; margin-bottom: 0.5rem;">Client Lookup (Demo)</h2>
+              <p style="margin-bottom: 1.5rem; color: #666;">On the live site clients can use this to have the majority of their forms filled out for them via database information, it does not function in this demo</p>
               <form id="lookup-form" class="reservation-form" style="max-width: 100%; gap: 1rem;">
                   <div class="form-group">
                       <input type="text" id="lookup-identifier" placeholder="Email or Phone Number" required style="text-align: center;">
@@ -227,6 +227,12 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
+    // Intercept Booking Form links to show the disclaimer modal
+    if (href.includes('index.html') || btn.classList.contains('reserve-btn')) {
+        e.preventDefault();
+        showLookupModal(href || 'index.html');
+        return;
+    }
   });
 
   // --- Gift Card Modal Logic ---
