@@ -65,8 +65,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const newWidth = image.offsetWidth;
       const newHeight = image.offsetHeight;
 
-      // Only resize if the dimensions have actually changed to prevent clearing on scroll
-      if (canvas.width === newWidth && canvas.height === newHeight) return;
+      // Only resize if dimensions are valid and have actually changed
+      if (newWidth === 0 || (canvas.width === newWidth && canvas.height === newHeight)) return;
 
       // Save current content to restore after resize
       const tempContent = canvas.toDataURL();
