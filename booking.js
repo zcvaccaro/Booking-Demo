@@ -282,7 +282,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 conditions: urlParams.get('conditions') || '',
                 allergies: urlParams.get('allergies') || ''
             });
-            window.location.href = `bookingconfirm.html?${mockParams.toString()}`;
+            window.location.href = `bookingConfirm.html?${mockParams.toString()}`;
 
         } catch (error) {
             console.error('Booking failed:', error);

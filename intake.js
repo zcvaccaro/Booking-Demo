@@ -74,14 +74,21 @@ document.addEventListener('DOMContentLoaded', () => {
       canvas.width = newWidth;
       canvas.height = newHeight;
 
-      const img = new Image();
-      img.onload = () => ctx.drawImage(img, 0, 0, newWidth, newHeight);
-      img.src = tempContent;
-
+      // Re-apply context settings as they are reset when canvas width/height are changed
       ctx.strokeStyle = "red";
       ctx.lineWidth = 3;
       ctx.lineCap = "round";
       ctx.lineJoin = "round";
+
+      // Restore previous drawing content
+      const img = new Image();
+      img.onload = () => {
+          ctx.drawImage(img, 0, 0, newWidth, newHeight);
+          // Ensure settings persist after drawing the image
+          ctx.strokeStyle = "red";
+          ctx.lineWidth = 3;
+      };
+      img.src = tempContent;
     };
 
     // Initially disable the undo button
@@ -314,7 +321,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // No actual fetch call needed for mocking
 
                 // 5. Redirect on success
-                window.location.href = 'intakeconfirm.html';
+                window.location.href = 'intakeConfirm.html';
             } catch (error) {
                 console.error('Intake form submission error:', error);
                 alert('There was an error submitting your form. Please try again.');
